@@ -1,0 +1,41 @@
+/* Cart Update Animations */
+.price-updated {
+    animation: priceHighlight 0.6s ease;
+}
+
+@keyframes priceHighlight {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: #7fad39;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 3px;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* Loading state for quantity buttons */
+.qtybtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Cart message styling */
+.cart-message {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block hero %}
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="{% static 'img/breadcrumb.jpg' %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>KHQR Payment</h2>
+                    <div class="breadcrumb__option">
+                        <a href="{% url 'core:index' %}">Home</a>
+                        <span>Payment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+{% endblock %}
+
+{% block content %}
+<!-- KHQR Payment Section Begin -->
+<section class="khqr-payment spad">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <!-- ABA QR Card -->
+                <div class="aba-qr-card">
+                    <!-- ABA QR Header -->
+                    <div class="aba-qr-header">
+                        <h2>ABA<sup>+</sup> QR</h2>
+                    </div>
+
+                    <!-- QR Content Card -->
+                    <div class="qr-content-card">
+                        <!-- KHQR Badge -->
+                        <div class="khqr-badge">
+                            KHQR
+                        </div>
+
+                        <!-- Merchant Info -->
+                        <div class="merchant-info">
+                            <h4>{{ merchant_name }}</h4>
+                            <h2 class="amount">${{ order.total_price|floatformat:2 }}</h2>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="qr-divider"></div>
+
+                        <!-- QR Code -->
+                        <div class="qr-code-display">
+                            <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="ABA PayWay QR Code"
+                                class="qr-image">
+                        </div>
+
+                        <!-- Scan Instructions -->
+                        <p class="scan-instruction">
+                            Scan with any Mobile Banking App<br>
+                            supporting KHQR
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="payment-actions mt-4">
+                    <form action="{% url 'core:order_success' order.id %}" method="GET">
+                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                            <i class="fa fa-check-circle"></i> I've Completed Payment
+                        </button>
+                    </form>
+                    <a href="{% url 'core:checkout' %}" class="btn btn-outline-secondary btn-block mt-2">
+                        <i class="fa fa-arrow-left"></i> Return to Checkout
+                    </a>
+                </div>
+
+                <!-- Order Details -->
+                <div class="order-summary mt-4">
+                    <h6 class="mb-3"><i class="fa fa-shopping-cart"></i> Order #{{ order.id }} Items:</h6>
+                    <div class="order-items">
+                        {% for item in order_items %}
+                        <div class="order-item">
+                            <span class="item-name">{{ item.product.name }} (x{{ item.quantity }})</span>
+                            <span class="item-price">${{ item.get_total_price|floatformat:2 }}</span>
+                        </div>
+                        {% endfor %}
+                        <div class="order-total">
+                            <strong>Total</strong>
+                            <strong>${{ order.total_price|floatformat:2 }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- KHQR Payment Section End -->
+
+<style>
+    /* ABA QR Card Styling */
+    .aba-qr-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .aba-qr-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .aba-qr-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #005BAA;
+        margin: 0;
+        letter-spacing: 1px;
+    }
+
+    .aba-qr-header sup {
+        font-size: 16px;
+    }
+
+    .qr-content-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        position: relative;
+    }
+
+    .khqr-badge {
+        background: #E31E24;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 0 0 10px 10px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 2px;
+    }
+
+    .merchant-info {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .merchant-info h4 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .merchant-info .amount {
+        font-size: 42px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+
+    .qr-divider {
+        border-top: 2px dashed #ddd;
+        margin: 20px 0;
+    }
+
+    .qr-code-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+    }
+
+    .qr-image {
+        max-width: 280px;
+        width: 100%;
+        height: auto;
+    }
+
+    .scan-instruction {
+        text-align: center;
+        color: #999;
+        font-size: 13px;
+        line-height: 1.6;
+        margin: 20px 0 0 0;
+    }
+
+    .payment-actions .btn {
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 600;
+    }
+
+    .order-summary {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .order-summary h6 {
+        color: #555;
+        font-weight: 600;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+    }
+
+    .order-items {
+        margin-top: 15px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-item .item-name {
+        color: #666;
+    }
+
+    .order-item .item-price {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0 5px 0;
+        font-size: 18px;
+        color: #005BAA;
+    }
+</style>
+{% endblock %}
